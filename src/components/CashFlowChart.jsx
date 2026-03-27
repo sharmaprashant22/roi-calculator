@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import {
   LineChart,
   Line,
@@ -41,7 +42,7 @@ function CustomTooltip({ active, payload, label }) {
   return null;
 }
 
-export default function CashFlowChart({ series }) {
+const CashFlowChart = forwardRef(function CashFlowChart({ series }, ref) {
   const maxPeriod = Math.max(...series.map((s) => s.data.length));
 
   const mergedData = Array.from({ length: maxPeriod }, (_, i) => {
@@ -53,7 +54,7 @@ export default function CashFlowChart({ series }) {
   });
 
   return (
-    <div className="card">
+    <div className="card" ref={ref}>
       <div className="chart-title">Cumulative Cash Flow</div>
       <ResponsiveContainer width="100%" height={280}>
         <LineChart data={mergedData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
@@ -95,4 +96,6 @@ export default function CashFlowChart({ series }) {
       </ResponsiveContainer>
     </div>
   );
-}
+});
+
+export default CashFlowChart;
