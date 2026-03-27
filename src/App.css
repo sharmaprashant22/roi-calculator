@@ -289,6 +289,34 @@ body {
   color: #f87171;
 }
 
+/* ── Export PDF Button ── */
+
+.results-panel-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.export-pdf-btn {
+  padding: 0.45rem 1rem;
+  background: #3399ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.export-pdf-btn:hover {
+  background: #1a85e8;
+}
+
+.export-pdf-btn:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
 /* ── Table Toggle Button ── */
 
 .table-toggle-btn {

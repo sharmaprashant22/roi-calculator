@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import InputForm from './components/InputForm';
 import Results from './components/Results';
 import CashFlowChart from './components/CashFlowChart';
 import BreakdownTable from './components/BreakdownTable';
 import { calculateROI } from './utils/calculations';
+import { exportToPdf } from './utils/exportPdf';
 import './App.css';
 
 const SCENARIO_1_DEFAULTS = {
@@ -29,6 +30,17 @@ export default function App() {
   const [values2, setValues2] = useState(SCENARIO_2_DEFAULTS);
   const [compareMode, setCompareMode] = useState(false);
   const [showTable, setShowTable] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const chartRef = useRef(null);
+
+  async function handleExport() {
+    setIsExporting(true);
+    try {
+      await exportToPdf({ values, values2, result, result2, compareMode, chartRef });
+    } finally {
+      setIsExporting(false);
+    }
+  }
 
   const result = calculateROI(values);
   const result2 = calculateROI(values2);
@@ -73,6 +85,15 @@ export default function App() {
         </div>
 
         <div className={`results-panel ${resultsDisabled ? 'results-disabled' : ''}`}>
+          <div className="results-panel-header">
+            <button
+              className="export-pdf-btn"
+              onClick={handleExport}
+              disabled={isExporting || resultsDisabled}
+            >
+              {isExporting ? 'Generating…' : '⬇ Save as PDF'}
+            </button>
+          </div>
           {compareMode ? (
             <div className="results-row">
               <Results result={result} label="Scenario 1" color="#3399ff" />
@@ -81,7 +102,7 @@ export default function App() {
           ) : (
             <Results result={result} />
           )}
-          <CashFlowChart series={chartSeries} />
+          <CashFlowChart series={chartSeries} ref={chartRef} />
 
           <button className="table-toggle-btn" onClick={() => setShowTable((v) => !v)}>
             {showTable ? 'Hide Table' : 'Show Monthly Breakdown'}
