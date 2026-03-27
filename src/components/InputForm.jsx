@@ -1,53 +1,59 @@
-export default function InputForm({ values, onChange }) {
+import { useState } from 'react';
+
+const NUMERIC_FIELDS = ['initialInvestment', 'monthlyRevenue', 'monthlyCosts'];
+
+function getError(name, value) {
+  if (!NUMERIC_FIELDS.includes(name)) return null;
+  if (isNaN(value) || value <= 0) return 'Must be a positive number';
+  return null;
+}
+
+export default function InputForm({ values, onChange, label = 'Project Inputs', color = '#3399ff', onRemove }) {
+  const [touched, setTouched] = useState({});
+
   function handle(e) {
     const { name, value } = e.target;
-    onChange({ ...values, [name]: name === 'period' ? Number(value) : Number(value) });
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    onChange({ ...values, [name]: Number(value) });
+  }
+
+  function field(name, labelText, id) {
+    const error = touched[name] ? getError(name, values[name]) : null;
+    return (
+      <div className={`form-group ${error ? 'has-error' : ''}`}>
+        <label htmlFor={id}>{labelText}</label>
+        <input
+          id={id}
+          name={name}
+          type="number"
+          min="0"
+          value={values[name]}
+          onChange={handle}
+        />
+        {error && <div className="field-error">{error}</div>}
+      </div>
+    );
   }
 
   return (
-    <div className="form-panel">
-      <div className="form-title">Project Inputs</div>
-
-      <div className="form-group">
-        <label htmlFor="initialInvestment">Initial Investment ($)</label>
-        <input
-          id="initialInvestment"
-          name="initialInvestment"
-          type="number"
-          min="0"
-          value={values.initialInvestment}
-          onChange={handle}
-        />
+    <div className="form-panel" style={{ '--accent': color }}>
+      <div className="form-header">
+        <div className="form-title">{label}</div>
+        {onRemove && (
+          <button className="remove-scenario-btn" onClick={onRemove} title="Remove scenario">
+            ×
+          </button>
+        )}
       </div>
 
-      <div className="form-group">
-        <label htmlFor="monthlyRevenue">Expected Monthly Revenue ($)</label>
-        <input
-          id="monthlyRevenue"
-          name="monthlyRevenue"
-          type="number"
-          min="0"
-          value={values.monthlyRevenue}
-          onChange={handle}
-        />
-      </div>
+      {field('initialInvestment', 'Initial Investment ($)', `initialInvestment-${label}`)}
+      {field('monthlyRevenue', 'Expected Monthly Revenue ($)', `monthlyRevenue-${label}`)}
+      {field('monthlyCosts', 'Monthly Operating Costs ($)', `monthlyCosts-${label}`)}
 
       <div className="form-group">
-        <label htmlFor="monthlyCosts">Monthly Operating Costs ($)</label>
-        <input
-          id="monthlyCosts"
-          name="monthlyCosts"
-          type="number"
-          min="0"
-          value={values.monthlyCosts}
-          onChange={handle}
-        />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="period">Calculation Period (months)</label>
+        <label htmlFor={`period-${label}`}>Calculation Period (months)</label>
         <select
-          id="period"
+          id={`period-${label}`}
           name="period"
           value={values.period}
           onChange={handle}
