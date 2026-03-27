@@ -66,13 +66,34 @@ body {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
 .form-title {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #3399ff;
+  color: var(--accent, #3399ff);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: 1.5rem;
+}
+
+.remove-scenario-btn {
+  background: transparent;
+  border: none;
+  color: #8892a4;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.2rem;
+  transition: color 0.15s;
+}
+
+.remove-scenario-btn:hover {
+  color: #ff6b35;
 }
 
 .form-group {
@@ -105,7 +126,7 @@ body {
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #3399ff;
+  border-color: var(--accent, #3399ff);
   background: rgba(51, 153, 255, 0.08);
 }
 
@@ -114,12 +135,57 @@ body {
   color: white;
 }
 
+.form-group.has-error input,
+.form-group.has-error select {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.field-error {
+  font-size: 0.7rem;
+  color: #ef4444;
+  margin-top: 0.3rem;
+}
+
+/* ── Forms Wrapper ── */
+
+.forms-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.add-scenario-btn {
+  width: 100%;
+  padding: 0.65rem;
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: #8892a4;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.add-scenario-btn:hover {
+  border-color: #3399ff;
+  color: #3399ff;
+  background: rgba(51, 153, 255, 0.05);
+}
+
 /* ── Results Panel ── */
 
 .results-panel {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+.results-panel.results-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  user-select: none;
 }
 
 .card {
@@ -174,6 +240,14 @@ body {
   color: #dc2626;
 }
 
+/* ── Results Row (compare mode) ── */
+
+.results-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
 /* ── Chart Tooltip ── */
 
 .chart-tooltip {
@@ -181,16 +255,29 @@ body {
   border: 1px solid rgba(51, 153, 255, 0.3);
   border-radius: 6px;
   padding: 0.6rem 0.9rem;
+  min-width: 160px;
 }
 
 .chart-tooltip-month {
   font-size: 0.75rem;
   color: #8892a4;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.chart-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.2rem;
+}
+
+.chart-tooltip-name {
+  font-size: 0.75rem;
 }
 
 .chart-tooltip-value {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
@@ -200,6 +287,121 @@ body {
 
 .chart-tooltip-value.negative {
   color: #f87171;
+}
+
+/* ── Table Toggle Button ── */
+
+.table-toggle-btn {
+  width: 100%;
+  padding: 0.6rem;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  color: #3399ff;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.table-toggle-btn:hover {
+  background: rgba(51, 153, 255, 0.05);
+  border-color: #3399ff;
+}
+
+/* ── Breakdown Table ── */
+
+.table-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+
+.breakdown-table th {
+  text-align: right;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.breakdown-table th:first-child {
+  text-align: center;
+}
+
+.breakdown-table td {
+  text-align: right;
+  padding: 0.4rem 0.75rem;
+  color: #1a1a2e;
+}
+
+.breakdown-table tbody tr:nth-child(even) {
+  background: #f8f9fc;
+}
+
+.breakdown-table tbody tr:hover {
+  background: rgba(51, 153, 255, 0.04);
+}
+
+.breakdown-table .break-even-row {
+  background: rgba(22, 163, 74, 0.08) !important;
+}
+
+.breakdown-table .break-even-row td {
+  font-weight: 600;
+}
+
+.month-cell {
+  text-align: center !important;
+  font-weight: 600;
+  color: #888 !important;
+  white-space: nowrap;
+}
+
+.break-even-badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #16a34a;
+  background: rgba(22, 163, 74, 0.12);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
+.breakdown-table .positive {
+  color: #16a34a;
+}
+
+.breakdown-table .negative {
+  color: #dc2626;
+}
+
+/* Side-by-side tables in compare mode */
+
+.tables-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
 /* ── Responsive ── */
